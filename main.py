@@ -1,14 +1,11 @@
 import cv2
 import numpy as np
 
-# img = cv2.imread('traffic-light/red.jpg')
-# img = cv2.imread('traffic-light/red_1/1162.jpg')
+# img = cv2.imread('test/red.jpg')
+img = cv2.imread('test/yellow.jpg')
+# img = cv2.imread('test/green.jpg')
 
-img = cv2.imread('traffic-light/yellow.jpg')
-# img = cv2.imread('traffic-light/yellow_1/78.jpg')
-
-# img = cv2.imread('traffic-light/green.jpg')
-# img = cv2.imread('traffic-light/green_1/97.jpg')
+h, w = img.shape[:2]
 
 img_hsv=cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
@@ -38,23 +35,22 @@ mask_yellow = cv2.inRange(img_hsv, lower_yellow, upper_yellow)
 mask = mask_red + mask_yellow + mask_green
 
 # set my output img to zero everywhere except my mask
-output_img = img.copy()
-output_img[np.where(mask==0)] = 0
-h, w = output_img.shape[:2]
+# output_img = img.copy()
+# output_img[np.where(mask==0)] = 0
 
 # or your HSV image, which I *believe* is what you want
 # output_hsv = img_hsv.copy()
 # output_hsv[np.where(mask_green==0)] = 0
 
-area_red = cv2.countNonZero(cv2.cvtColor(output_img[0:int(h/3), 0:w], cv2.COLOR_BGR2GRAY))
-area_yellow = cv2.countNonZero(cv2.cvtColor(output_img[int(h/3):int(2*h/3), 0:w], cv2.COLOR_BGR2GRAY))
-area_green = cv2.countNonZero(cv2.cvtColor(output_img[int(2*h/3):h, 0:w], cv2.COLOR_BGR2GRAY))
+area_red = cv2.countNonZero(mask[0:int(h/3), 0:w])
+area_yellow = cv2.countNonZero(mask[int(h/3):int(2*h/3), 0:w])
+area_green = cv2.countNonZero(mask[int(2*h/3):h, 0:w])
 
 color_map = ["RED", "YELLOW", "GREEN"]
 
 print(color_map[np.argmax([area_red, area_yellow, area_green])])
 
 cv2.namedWindow("i", cv2.WINDOW_NORMAL)
-cv2.imshow("i", output_img)
+cv2.imshow("i", mask)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
