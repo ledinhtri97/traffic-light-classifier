@@ -9,28 +9,28 @@ h, w = img.shape[:2]
 
 img_hsv=cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-# lower mask (0-10)
+# RED: lower mask (0-10)
 lower_red = np.array([0,50,50])
 upper_red = np.array([10,255,255])
 mask_red0 = cv2.inRange(img_hsv, lower_red, upper_red)
 
-# upper mask (170-180)
+# RED: upper mask (170-180)
 lower_red = np.array([170,50,50])
 upper_red = np.array([180,255,255])
 mask_red1 = cv2.inRange(img_hsv, lower_red, upper_red)
 
-# join my masks
+# join RED masks
 mask_red = mask_red0+mask_red1
 
-# lower mask (36-70)
-lower_green = np.array([45,50,50])
-upper_green = np.array([95,255,255])
-mask_green = cv2.inRange(img_hsv, lower_green, upper_green)
-
-# lower mask (36-70)
+# YELLOW: mask (12-36)
 lower_yellow = np.array([12,50,50])
 upper_yellow = np.array([36,255,255])
 mask_yellow = cv2.inRange(img_hsv, lower_yellow, upper_yellow)
+
+# GREEN: mask (45-95)
+lower_green = np.array([45,50,50])
+upper_green = np.array([95,255,255])
+mask_green = cv2.inRange(img_hsv, lower_green, upper_green)
 
 mask = mask_red + mask_yellow + mask_green
 
