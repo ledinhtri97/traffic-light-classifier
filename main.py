@@ -1,9 +1,10 @@
 import cv2
 import numpy as np
 
-# img = cv2.imread('test/red.jpg')
-img = cv2.imread('test/yellow.jpg')
-# img = cv2.imread('test/green.jpg')
+#jpg, png
+#img = cv2.imread('test/red.png')
+#img = cv2.imread('test/yellow.png') 
+img = cv2.imread('test/green.png')
 
 h, w = img.shape[:2]
 
@@ -32,8 +33,6 @@ lower_green = np.array([45,50,50])
 upper_green = np.array([95,255,255])
 mask_green = cv2.inRange(img_hsv, lower_green, upper_green)
 
-mask = mask_red + mask_yellow + mask_green
-
 # set my output img to zero everywhere except my mask
 # output_img = img.copy()
 # output_img[np.where(mask==0)] = 0
@@ -42,15 +41,21 @@ mask = mask_red + mask_yellow + mask_green
 # output_hsv = img_hsv.copy()
 # output_hsv[np.where(mask_green==0)] = 0
 
-area_red = cv2.countNonZero(mask[0:int(h/3), 0:w])
-area_yellow = cv2.countNonZero(mask[int(h/3):int(2*h/3), 0:w])
-area_green = cv2.countNonZero(mask[int(2*h/3):h, 0:w])
+area_red = cv2.countNonZero(mask_red[0:int(h/3), 0:w])
+area_yellow = cv2.countNonZero(mask_yellow[int(h/3):int(2*h/3), 0:w])
+area_green = cv2.countNonZero(mask_green[int(2*h/3):h, 0:w])
 
 color_map = ["RED", "YELLOW", "GREEN"]
 
 print(color_map[np.argmax([area_red, area_yellow, area_green])])
 
-cv2.namedWindow("i", cv2.WINDOW_NORMAL)
-cv2.imshow("i", mask)
+cv2.namedWindow("mask_red", cv2.WINDOW_NORMAL)
+cv2.imshow("mask_red", mask_red)
+cv2.namedWindow("mask_yellow", cv2.WINDOW_NORMAL)
+cv2.imshow("mask_yellow", mask_yellow)
+cv2.namedWindow("mask_green", cv2.WINDOW_NORMAL)
+cv2.imshow("mask_green", mask_green)
+cv2.namedWindow("img_hsv", cv2.WINDOW_NORMAL)
+cv2.imshow("img_hsv", img_hsv)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
