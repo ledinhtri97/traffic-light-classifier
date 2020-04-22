@@ -7,7 +7,16 @@ parser.add_argument('topic', type=str,
 args = parser.parse_args()
 
 img = cv2.imread(args.topic)
+grey = cv2.imread(args.topic, cv2.IMREAD_GRAYSCALE)
+traffic_light = np.array(
+    255 * (grey / 255) ** 2.0, dtype="uint8"
+)
+traffic_light = np.array(traffic_light / np.max(traffic_light) * 255, dtype="uint8")
 
+cv2.namedWindow("img_hsv", cv2.WINDOW_NORMAL)
+cv2.imshow("img_hsv", traffic_light)
+
+print(traffic_light.shape)
 img_hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
 # RED: lower mask (0-10)
@@ -54,7 +63,5 @@ if (detected_color == "GREEN"):
 	cv2.namedWindow("mask_green", cv2.WINDOW_NORMAL)
 	cv2.imshow("mask_green", mask_green)
 
-# cv2.namedWindow("img_hsv", cv2.WINDOW_NORMAL)
-# cv2.imshow("img_hsv", img_hsv)
 cv2.waitKey(0)
 cv2.destroyAllWindows()
